@@ -21,4 +21,3 @@ target_link_libraries(TLS
         Qt::Core
         Qt::Widgets
 )
-
