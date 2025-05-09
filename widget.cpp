@@ -29,7 +29,8 @@ Widget::Widget(QWidget *parent)
     networkManager = new QNetworkAccessManager;
     connect(confirm,&QPushButton::clicked,
             this, &Widget::onClicked);
-
+    connect(networkManager, &QNetworkAccessManager::finished,
+            this, &Widget::onFinished);
 }
 
 Widget::~Widget()
@@ -40,10 +41,19 @@ Widget::~Widget()
 
 void Widget::onClicked()
 {
-
+    const QUrl url("https://api.agify.io?name=michael");
+    QNetworkRequest request(url);
+    networkManager->get(request);
 }
 
 void Widget::onFinished(QNetworkReply *reply)
 {
-
+    if(reply->error()!=QNetworkReply::NoError)
+    {
+        qDebug()<< "Error:" << reply->errorString();
+        return;
+    }
+    QByteArray data = reply->readAll();
+    qDebug() << "Response:" << data;
+    reply->deleteLater();
 }
