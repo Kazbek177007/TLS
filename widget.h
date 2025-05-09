@@ -1,6 +1,7 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include <QNetworkReply>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -19,5 +20,9 @@ public:
 
 private:
     Ui::Widget *ui;
+    QNetworkAccessManager* networkManager;
+private slots:
+    void onClicked();
+    void onFinished(QNetworkReply* reply);
 };
 #endif // WIDGET_H

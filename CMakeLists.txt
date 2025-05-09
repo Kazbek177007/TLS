@@ -5,7 +5,7 @@ set(CMAKE_AUTOMOC ON)       # включает автоматическую ге
 set(CMAKE_AUTORCC ON)       # включает автоматическую генерацию ресурсов
 set(CMAKE_AUTOUIC ON)       # включает автоматическую генерацию из .ui
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Network)
 
 qt_standard_project_setup()
 
@@ -20,4 +20,5 @@ target_link_libraries(TLS
     PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt::Network
 )
