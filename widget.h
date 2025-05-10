@@ -3,6 +3,7 @@
 
 #include <QNetworkReply>
 #include <QWidget>
+#include <qlineedit.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,6 +22,8 @@ public:
 private:
     Ui::Widget *ui;
     QNetworkAccessManager* networkManager;
+    QLineEdit* codeuser;
+
 private slots:
     void onClicked();
     void onFinished(QNetworkReply* reply);

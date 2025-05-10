@@ -23,7 +23,8 @@ Widget::Widget(QWidget *parent)
     auto calculation = new QLabel;
     calculation->setText("formula");
     vbox->addWidget(calculation);
-    hbox->addWidget(new QLineEdit);
+    codeuser = new QLineEdit;
+    hbox->addWidget(codeuser);
     hbox->addWidget(new QComboBox);
     hbox->addWidget(new QLineEdit);
     networkManager = new QNetworkAccessManager;
@@ -41,7 +42,16 @@ Widget::~Widget()
 
 void Widget::onClicked()
 {
-    const QUrl url("https://api.agify.io?name=michael");
+    QString code = codeuser->text();
+    if (code.isEmpty())
+        return;
+    QString login = "testlogin";
+    QString pass = "testpassword";
+    QString password = QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5).toHex();
+    QString secret = QCryptographicHash::hash((code+":"+login+":"+password).toUtf8(), QCryptographicHash::Md5).toHex();
+    QString countrycode = "156";
+
+    const QUrl url("https://www.alta.ru/tnved/xml/?tncode="+code+"&login="+login+"&secret="+secret);
     QNetworkRequest request(url);
     networkManager->get(request);
 }
