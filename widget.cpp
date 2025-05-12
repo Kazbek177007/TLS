@@ -54,6 +54,7 @@ void Widget::onClicked()
     const QUrl url("https://www.alta.ru/tnved/xml/?tncode="+code+"&login="+login+"&secret="+secret);
     QNetworkRequest request(url);
     networkManager->get(request);
+    codeuser->clear();
 }
 
 void Widget::onFinished(QNetworkReply *reply)
