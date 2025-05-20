@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QVBoxLayout>
 
 Widget::Widget(QWidget *parent)
@@ -22,6 +23,8 @@ Widget::Widget(QWidget *parent)
     vbox->addWidget(confirm);
     customsFees = new QLabel("Customs fees");
     vbox->addWidget(customsFees);
+    vatVariants = new QVBoxLayout;
+    vbox->addLayout(vatVariants);
     auto calculation = new QLabel;
     calculation->setText("formula");
     vbox->addWidget(calculation);
@@ -92,17 +95,15 @@ void Widget::onFinished(QNetworkReply *reply)
     // 4. VAT data
     resultText += "НДС:\n";
     QDomNodeList vatNodes = root.firstChildElement("VATlist").elementsByTagName("VAT");
+    customsFees->setText(resultText);
 
     for (int i = 0; i < vatNodes.size(); ++i) {
         QDomElement vatElement = vatNodes.at(i).toElement();
         QString vatValue = vatElement.firstChildElement("Value").text();
         QString vatCondition = vatElement.firstChildElement("Condition").text();
-
-        resultText += QString("%1. Ставка: %2\n   Условие: %3\n")
-                          .arg(i+1)
-                          .arg(vatValue)
-                          .arg(vatCondition);
+        QRadioButton* button = new QRadioButton(vatValue+vatCondition);
+        vatVariants->addWidget(button);
     }
-    customsFees->setText(resultText);
+
     reply->deleteLater();
 }
