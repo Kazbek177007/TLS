@@ -3,6 +3,7 @@
 
 #include <QNetworkReply>
 #include <QWidget>
+#include <qboxlayout.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 
@@ -25,6 +26,7 @@ private:
     QNetworkAccessManager* networkManager;
     QLineEdit* codeuser;
     QLabel* customsFees;
+    QVBoxLayout* vatVariants;
 
 private slots:
     void onClicked();
