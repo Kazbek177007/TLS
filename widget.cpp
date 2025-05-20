@@ -2,6 +2,8 @@
 #include "ui_widget.h"
 
 #include <QComboBox>
+#include <QDomDocument>
+#include <QFile>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -18,7 +20,7 @@ Widget::Widget(QWidget *parent)
     vbox->addLayout(hbox);
     auto confirm = new QPushButton("Confirm");
     vbox->addWidget(confirm);
-    auto customsFees = new QLabel("Customs fees");
+    customsFees = new QLabel("Customs fees");
     vbox->addWidget(customsFees);
     auto calculation = new QLabel;
     calculation->setText("formula");
@@ -54,6 +56,7 @@ void Widget::onClicked()
     const QUrl url("https://www.alta.ru/tnved/xml/?tncode="+code+"&login="+login+"&secret="+secret);
     QNetworkRequest request(url);
     networkManager->get(request);
+
     codeuser->clear();
 }
 
@@ -65,6 +68,41 @@ void Widget::onFinished(QNetworkReply *reply)
         return;
     }
     QByteArray data = reply->readAll();
-    qDebug() << "Response:" << data;
+
+    QDomDocument doc;
+    doc.setContent(data);
+
+    QDomElement root = doc.documentElement();
+    QString resultText;
+
+    // 1. Code
+    QString code = root.firstChildElement("Code").text();
+    resultText += "Код: " + code + "\n";
+
+    // 2. Name
+    QString name = root.firstChildElement("Name").text();
+    resultText += "Наименование: " + name + "\n\n";
+
+    // 3. Import->Value
+    QString importValue = root.firstChildElement("Importlist")
+                              .firstChildElement("Import")
+                              .firstChildElement("Value").text();
+    resultText += "Импортная пошлина: " + importValue + "\n\n";
+
+    // 4. VAT data
+    resultText += "НДС:\n";
+    QDomNodeList vatNodes = root.firstChildElement("VATlist").elementsByTagName("VAT");
+
+    for (int i = 0; i < vatNodes.size(); ++i) {
+        QDomElement vatElement = vatNodes.at(i).toElement();
+        QString vatValue = vatElement.firstChildElement("Value").text();
+        QString vatCondition = vatElement.firstChildElement("Condition").text();
+
+        resultText += QString("%1. Ставка: %2\n   Условие: %3\n")
+                          .arg(i+1)
+                          .arg(vatValue)
+                          .arg(vatCondition);
+    }
+    customsFees->setText(resultText);
     reply->deleteLater();
 }
