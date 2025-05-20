@@ -3,6 +3,7 @@
 
 #include <QNetworkReply>
 #include <QWidget>
+#include <qlabel.h>
 #include <qlineedit.h>
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +24,7 @@ private:
     Ui::Widget *ui;
     QNetworkAccessManager* networkManager;
     QLineEdit* codeuser;
+    QLabel* customsFees;
 
 private slots:
     void onClicked();
