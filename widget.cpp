@@ -25,18 +25,23 @@ Widget::Widget(QWidget *parent)
     vbox->addWidget(customsFees);
     vatVariants = new QVBoxLayout;
     vbox->addLayout(vatVariants);
+    auto calculate = new QPushButton("Calculate");
+    vbox->addWidget(calculate);
     auto calculation = new QLabel;
     calculation->setText("formula");
     vbox->addWidget(calculation);
     codeuser = new QLineEdit;
     hbox->addWidget(codeuser);
     hbox->addWidget(new QComboBox);
-    hbox->addWidget(new QLineEdit);
+    price = new QLineEdit;
+    hbox->addWidget(price);
     networkManager = new QNetworkAccessManager;
     connect(confirm,&QPushButton::clicked,
             this, &Widget::onClicked);
     connect(networkManager, &QNetworkAccessManager::finished,
             this, &Widget::onFinished);
+    connect(calculate, &QPushButton::clicked,
+            this, &Widget::onCalculate);
 }
 
 Widget::~Widget()
@@ -87,7 +92,7 @@ void Widget::onFinished(QNetworkReply *reply)
     resultText += "Наименование: " + name + "\n\n";
 
     // 3. Import->Value
-    QString importValue = root.firstChildElement("Importlist")
+    importValue = root.firstChildElement("Importlist")
                               .firstChildElement("Import")
                               .firstChildElement("Value").text();
     resultText += "Импортная пошлина: " + importValue + "\n\n";
@@ -106,4 +111,11 @@ void Widget::onFinished(QNetworkReply *reply)
     }
 
     reply->deleteLater();
+}
+
+void Widget::onCalculate()
+{
+    price;
+    importValue;
+    // for button()
 }
