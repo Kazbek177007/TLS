@@ -27,9 +27,13 @@ private:
     QLineEdit* codeuser;
     QLabel* customsFees;
     QVBoxLayout* vatVariants;
+    QLineEdit* price;
+    QString importValue;
 
 private slots:
     void onClicked();
     void onFinished(QNetworkReply* reply);
+    void onCalculate();
+
 };
 #endif // WIDGET_H
