@@ -96,6 +96,7 @@ void Widget::onFinished(QNetworkReply *reply)
                               .firstChildElement("Import")
                               .firstChildElement("Value").text();
     resultText += "Импортная пошлина: " + importValue + "\n\n";
+    importValue.chop(1);
 
     // 4. VAT data
     resultText += "НДС:\n";
@@ -115,7 +116,36 @@ void Widget::onFinished(QNetworkReply *reply)
 
 void Widget::onCalculate()
 {
-    price;
-    importValue;
+    QRadioButton* selectedButton = nullptr;
+    for (int i = 0; i<vatVariants->count(); i++)
+    {
+        QWidget* widget = vatVariants->itemAt(i)->widget();
+        QRadioButton* ptrbutton = dynamic_cast<QRadioButton*>(widget);
+        if (ptrbutton->isChecked())
+        {
+            selectedButton = ptrbutton;
+            break;
+        }
+
+    }
+    if (!selectedButton)
+    {
+        return;
+    }
+    QString selectedVat = selectedButton->text();
+    selectedVat = selectedVat.split('%')[0];
+    int vat = selectedVat.toInt();
+    int imValue = importValue.toInt();
+    bool ok;
+    int price2 = price->text().toInt(&ok);
+    if(!ok)
+    {
+        return;
+    }
+    float result = price2*(imValue/100.0)+(price2*(imValue/100.0))*(vat/100.0);
+    qDebug() << price2;
+    qDebug() << imValue;
+    qDebug() << vat;
+
     // for button()
 }
