@@ -27,7 +27,7 @@ Widget::Widget(QWidget *parent)
     vbox->addLayout(vatVariants);
     auto calculate = new QPushButton("Calculate");
     vbox->addWidget(calculate);
-    auto calculation = new QLabel;
+    calculation = new QLabel;
     calculation->setText("formula");
     vbox->addWidget(calculation);
     codeuser = new QLineEdit;
@@ -96,6 +96,7 @@ void Widget::onFinished(QNetworkReply *reply)
                               .firstChildElement("Import")
                               .firstChildElement("Value").text();
     resultText += "Импортная пошлина: " + importValue + "\n\n";
+    importValue.chop(1);
 
     // 4. VAT data
     resultText += "НДС:\n";
@@ -115,7 +116,42 @@ void Widget::onFinished(QNetworkReply *reply)
 
 void Widget::onCalculate()
 {
-    price;
-    importValue;
+    QRadioButton* selectedButton = nullptr;
+    for (int i = 0; i<vatVariants->count(); i++)
+    {
+        QWidget* widget = vatVariants->itemAt(i)->widget();
+        QRadioButton* ptrbutton = dynamic_cast<QRadioButton*>(widget);
+        if (ptrbutton->isChecked())
+        {
+            selectedButton = ptrbutton;
+            break;
+        }
+
+    }
+    if (!selectedButton)
+    {
+        return;
+    }
+    QString selectedVat = selectedButton->text();
+    selectedVat = selectedVat.split('%')[0];
+    int vat = selectedVat.toInt();
+    int imValue = importValue.toInt();
+    bool ok;
+    float price2 = price->text().toInt(&ok);
+    if(!ok)
+    {
+        return;
+    }
+    float impValue = price2*(imValue/100.00);
+    float resValue = price2+impValue;
+    float result = (resValue)*(vat/100.00);
+    float stp = result+impValue;
+    calculation->setText(QString("Таможенный пошлина: (%1*%2%)=%3\n НДС: %4*%5%=%6\n СТП: %7").arg(price2).arg(imValue).arg(impValue).arg(resValue).arg(vat).arg(result).arg(stp));
+
+
+
+
     // for button()
+
+    //delete qradiburron
 }
