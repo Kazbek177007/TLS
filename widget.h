@@ -29,6 +29,7 @@ private:
     QVBoxLayout* vatVariants;
     QLineEdit* price;
     QString importValue;
+    QLabel* calculation;
 
 private slots:
     void onClicked();
