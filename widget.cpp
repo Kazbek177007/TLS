@@ -1,5 +1,6 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include "percent.h"
 
 #include <QComboBox>
 #include <QDomDocument>
@@ -98,6 +99,8 @@ void Widget::onFinished(QNetworkReply *reply)
     resultText += "Импортная пошлина: " + importValue + "\n\n";
     importValue.chop(1);
 
+    auto import = new Percent(root.firstChildElement("Importlist").firstChildElement("Import"));
+    vatVariants->addWidget(import);
     // 4. VAT data
     resultText += "НДС:\n";
     QDomNodeList vatNodes = root.firstChildElement("VATlist").elementsByTagName("VAT");
@@ -121,7 +124,7 @@ void Widget::onCalculate()
     {
         QWidget* widget = vatVariants->itemAt(i)->widget();
         QRadioButton* ptrbutton = dynamic_cast<QRadioButton*>(widget);
-        if (ptrbutton->isChecked())
+        if (ptrbutton and ptrbutton->isChecked())
         {
             selectedButton = ptrbutton;
             break;

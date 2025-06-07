@@ -14,6 +14,7 @@ qt_add_executable(TLS
     widget.cpp
     widget.h
     widget.ui
+    percent.h percent.cpp
 )
 
 target_link_libraries(TLS
