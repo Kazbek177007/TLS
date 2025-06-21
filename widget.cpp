@@ -93,16 +93,11 @@ void Widget::onFinished(QNetworkReply *reply)
     resultText += "Наименование: " + name + "\n\n";
 
     // 3. Import->Value
-    importValue = root.firstChildElement("Importlist")
-                              .firstChildElement("Import")
-                              .firstChildElement("Value").text();
-    resultText += "Импортная пошлина: " + importValue + "\n\n";
-    importValue.chop(1);
+    auto percent = new Percent(root.firstChildElement("Importlist").firstChildElement("Import"));
+    import = percent;
+    vatVariants->addWidget(percent);
 
-    auto import = new Percent(root.firstChildElement("Importlist").firstChildElement("Import"));
-    vatVariants->addWidget(import);
     // 4. VAT data
-    resultText += "НДС:\n";
     QDomNodeList vatNodes = root.firstChildElement("VATlist").elementsByTagName("VAT");
     customsFees->setText(resultText);
 
@@ -137,24 +132,8 @@ void Widget::onCalculate()
     }
     QString selectedVat = selectedButton->text();
     selectedVat = selectedVat.split('%')[0];
-    int vat = selectedVat.toInt();
-    int imValue = importValue.toInt();
-    bool ok;
-    float price2 = price->text().toInt(&ok);
-    if(!ok)
-    {
-        return;
-    }
-    float impValue = price2*(imValue/100.00);
-    float resValue = price2+impValue;
-    float result = (resValue)*(vat/100.00);
-    float stp = result+impValue;
-    calculation->setText(QString("Таможенный пошлина: (%1*%2%)=%3\n НДС: %4*%5%=%6\n СТП: %7").arg(price2).arg(imValue).arg(impValue).arg(resValue).arg(vat).arg(result).arg(stp));
+    float vat = selectedVat.toFloat();
+    float result = import->calculate({vat,price->text().toFloat()});
+    calculation->setText(QString::number(result));
 
-
-
-
-    // for button()
-
-    //delete qradiburron
 }

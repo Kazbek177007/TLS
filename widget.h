@@ -1,6 +1,8 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include "icustomfees.h"
+
 #include <QNetworkReply>
 #include <QWidget>
 #include <qboxlayout.h>
@@ -30,6 +32,7 @@ private:
     QLineEdit* price;
     QString importValue;
     QLabel* calculation;
+    ICustomFees*  import;
 
 private slots:
     void onClicked();
