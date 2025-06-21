@@ -19,6 +19,7 @@ qt_add_executable(TLS
     widget.ui
     percent.h percent.cpp
     icustomfees.h
+    eurokg.h eurokg.cpp eurokg.ui
 )
 
 target_link_libraries(TLS
