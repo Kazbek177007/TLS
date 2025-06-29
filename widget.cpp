@@ -56,13 +56,16 @@ void Widget::onClicked()
     QString code = codeuser->text();
     if (code.isEmpty())
         return;
-    QString login = "testlogin";
-    QString pass = "testpassword";
+    QString login = "sa59547";
+    QString pass = "0HKoywM2";
     QString password = QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5).toHex();
+    qDebug() << password;
     QString secret = QCryptographicHash::hash((code+":"+login+":"+password).toUtf8(), QCryptographicHash::Md5).toHex();
+    qDebug() << secret;
     QString countrycode = "156";
 
     const QUrl url("https://www.alta.ru/tnved/xml/?tncode="+code+"&login="+login+"&secret="+secret);
+    qDebug() << url;
     QNetworkRequest request(url);
     networkManager->get(request);
 

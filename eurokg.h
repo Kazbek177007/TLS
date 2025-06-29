@@ -1,19 +1,22 @@
 #ifndef EUROKG_H
 #define EUROKG_H
-
+#include "icustomfees.h"
+#include <QDomElement>
 #include <QWidget>
 
 namespace Ui {
 class Eurokg;
 }
 
-class Eurokg : public QWidget
+class Eurokg : public QWidget, public ICustomFees
 {
     Q_OBJECT
 
 public:
-    explicit Eurokg(QWidget *parent = nullptr);
+    Eurokg(const QDomElement& import);
     ~Eurokg();
+    float calculate(Fees fees) override;
+    float valueCount;
 
 private:
     Ui::Eurokg *ui;

@@ -20,6 +20,7 @@ qt_add_executable(TLS
     percent.h percent.cpp
     icustomfees.h
     eurokg.h eurokg.cpp eurokg.ui
+    currency.h currency.cpp
 )
 
 target_link_libraries(TLS
