@@ -6,7 +6,8 @@ Eurokg::Eurokg(const QDomElement& import)
 {
     ui = new Ui::Eurokg;
     ui->setupUi(this);
-    valueCount =import.firstChildElement("Value").firstChildElement("ValueDetail").firstChildElement("ValueCount").text().toFloat();
+    valueCount =import.firstChildElement("ValueDetail").firstChildElement("ValueCount").text().toFloat();
+    ui->info->setText(import.firstChildElement("Value").text());
 
 }
 
@@ -17,8 +18,10 @@ Eurokg::~Eurokg()
 
 float Eurokg::calculate(Fees fees)
 {
+    qDebug() << Currency::get().euro();
+    qDebug() <<Currency::get().dollar();
 
-    float euroKgFees = valueCount * Currency::get().euro()/Currency::get().dollar();
+    float euroKgFees = valueCount * Currency::get().euro()/Currency::get().dollar()*ui->inputKg->value();
     return euroKgFees;
 }
 
