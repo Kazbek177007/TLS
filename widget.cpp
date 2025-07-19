@@ -1,6 +1,8 @@
 #include "widget.h"
 #include "ui_widget.h"
 #include "percent.h"
+#include "eurokg.h"
+#include "currency.h"
 
 #include <QComboBox>
 #include <QDomDocument>
@@ -56,17 +58,59 @@ void Widget::onClicked()
     QString code = codeuser->text();
     if (code.isEmpty())
         return;
-    QString login = "testlogin";
-    QString pass = "testpassword";
+    QString login = "sa58789";
+    QString pass = "p2L9S2MU";
     QString password = QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5).toHex();
+    qDebug() << password;
     QString secret = QCryptographicHash::hash((code+":"+login+":"+password).toUtf8(), QCryptographicHash::Md5).toHex();
+    qDebug() << secret;
     QString countrycode = "156";
 
     const QUrl url("https://www.alta.ru/tnved/xml/?tncode="+code+"&login="+login+"&secret="+secret);
+    qDebug() << url;
     QNetworkRequest request(url);
     networkManager->get(request);
 
     codeuser->clear();
+}
+
+enum class CustomsFees
+{
+    percent,
+    euroKg
+};
+QDomElement xmlParser(const QDomNode& node, const QString& tagName)
+{
+    QDomNode child = node.firstChild();
+    while (!child.isNull()) {
+        if (child.isElement())
+        {
+            QDomElement el = child.toElement();
+            if(el.tagName()==tagName)
+                return el;
+
+            QDomElement found = xmlParser(child, tagName);
+            if(!found.isNull())
+                return found;
+        }
+        else
+        {
+            QDomElement found = xmlParser(child, tagName);
+            if(!found.isNull())
+                return found;
+        }
+        child = child.nextSibling();
+    }
+    return QDomElement();
+}
+
+CustomsFees recognize(const QDomElement& root)
+{
+    if (xmlParser(xmlParser(root, "Import"), "ValueUnit").text()=="кг")
+    {
+        return CustomsFees::euroKg;
+    }
+    return CustomsFees::percent;
 }
 
 void Widget::onFinished(QNetworkReply *reply)
@@ -93,9 +137,19 @@ void Widget::onFinished(QNetworkReply *reply)
     resultText += "Наименование: " + name + "\n\n";
 
     // 3. Import->Value
-    auto percent = new Percent(root.firstChildElement("Importlist").firstChildElement("Import"));
-    import = percent;
-    vatVariants->addWidget(percent);
+    if (recognize(root)==CustomsFees::euroKg)
+    {
+        auto euroKg = new Eurokg(root.firstChildElement("Importlist").firstChildElement("Import"));
+        import = euroKg;
+        vatVariants->addWidget(euroKg);
+    }
+    else
+    {
+        auto percent = new Percent(root.firstChildElement("Importlist").firstChildElement("Import"));
+        import = percent;
+        vatVariants->addWidget(percent);
+    }
+
 
     // 4. VAT data
     QDomNodeList vatNodes = root.firstChildElement("VATlist").elementsByTagName("VAT");
@@ -133,7 +187,7 @@ void Widget::onCalculate()
     QString selectedVat = selectedButton->text();
     selectedVat = selectedVat.split('%')[0];
     float vat = selectedVat.toFloat();
-    float result = import->calculate({vat,price->text().toFloat()});
-    calculation->setText(QString::number(result));
+    float result = import->calculate({vat/100,price->text().toFloat()});
+    calculation->setText(QString::number(result, 'f', 3));
 
 }

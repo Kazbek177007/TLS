@@ -2,7 +2,6 @@
 #define PERCENT_H
 
 #include "icustomfees.h"
-
 #include <QDomDocument>
 #include <QLabel>
 #include <QObject>

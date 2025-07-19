@@ -10,6 +10,9 @@ set(CMAKE_AUTOUIC ON)       # включает автоматическую ге
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Network Xml)
 
+
+
+
 qt_standard_project_setup()
 
 qt_add_executable(TLS
@@ -19,6 +22,8 @@ qt_add_executable(TLS
     widget.ui
     percent.h percent.cpp
     icustomfees.h
+    eurokg.h eurokg.cpp eurokg.ui
+    currency.h currency.cpp
 )
 
 target_link_libraries(TLS
@@ -27,4 +32,4 @@ target_link_libraries(TLS
         Qt::Widgets
         Qt::Network
         Qt::Xml
-)
+    )
