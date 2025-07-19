@@ -22,7 +22,17 @@
     </widget>
    </item>
    <item>
-    <widget class="QDoubleSpinBox" name="inputKg"/>
+    <widget class="QDoubleSpinBox" name="inputKg">
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>25000.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

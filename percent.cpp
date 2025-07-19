@@ -22,7 +22,7 @@ Percent::Percent(QDomElement import)
 float Percent::calculate(Fees fees)
 {
     float respercent = fees.price * value/100;
-    float resvat = (respercent + fees.price) * fees.vat/100;
+    float resvat = (respercent + fees.price) * fees.vat;
     return resvat + respercent;
 }
 

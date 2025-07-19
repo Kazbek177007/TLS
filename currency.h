@@ -2,6 +2,7 @@
 #define CURRENCY_H
 
 #include <QDomElement>
+#include <QNetworkAccessManager>
 #include <QObject>
 
 class Currency : public QObject
@@ -15,9 +16,9 @@ public:
     float euro() const;
     float dollar() const;
     float yuan() const;
-
 private:
     QDomElement root;
+
 
 };
 

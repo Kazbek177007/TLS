@@ -10,6 +10,9 @@ set(CMAKE_AUTOUIC ON)       # включает автоматическую ге
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Network Xml)
 
+
+
+
 qt_standard_project_setup()
 
 qt_add_executable(TLS
@@ -29,4 +32,4 @@ target_link_libraries(TLS
         Qt::Widgets
         Qt::Network
         Qt::Xml
-)
+    )

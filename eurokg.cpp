@@ -18,10 +18,9 @@ Eurokg::~Eurokg()
 
 float Eurokg::calculate(Fees fees)
 {
-    qDebug() << Currency::get().euro();
-    qDebug() <<Currency::get().dollar();
 
     float euroKgFees = valueCount * Currency::get().euro()/Currency::get().dollar()*ui->inputKg->value();
+    euroKgFees+= (fees.price+euroKgFees)*fees.vat;
     return euroKgFees;
 }
 

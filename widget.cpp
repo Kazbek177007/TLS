@@ -72,7 +72,6 @@ void Widget::onClicked()
     networkManager->get(request);
 
     codeuser->clear();
-    qDebug () << Currency::get().dollar();
 }
 
 enum class CustomsFees
@@ -188,7 +187,7 @@ void Widget::onCalculate()
     QString selectedVat = selectedButton->text();
     selectedVat = selectedVat.split('%')[0];
     float vat = selectedVat.toFloat();
-    float result = import->calculate({vat,price->text().toFloat()});
-    calculation->setText(QString::number(result));
+    float result = import->calculate({vat/100,price->text().toFloat()});
+    calculation->setText(QString::number(result, 'f', 3));
 
 }
